@@ -1,0 +1,1082 @@
+/* ==========================================================================
+   LangPlay — Neo-Brutalist design system
+   Rules this file commits to:
+     - Every surface has a hard 3px ink border. No borderless cards.
+     - Shadows are solid ink offsets, never blurred. No `blur` radius anywhere.
+     - Colors are flat and saturated. No gradients.
+     - Interactive things physically move when pressed.
+   ========================================================================== */
+
+:root {
+  /* Palette — flat, saturated, deliberately loud */
+  --ink: #12100e;
+  --paper: #fff8e7;
+  --card: #ffffff;
+
+  --green: #58cc02;
+  --green-deep: #43a302;
+  --blue: #1cb0f6;
+  --yellow: #ffc800;
+  --pink: #ff6b9d;
+  --purple: #ce82ff;
+  --red: #ff4b4b;
+  --orange: #ff9600;
+
+  /* Structure */
+  --bw: 3px;
+  --bw-thick: 4px;
+  --border: var(--bw) solid var(--ink);
+  --radius: 14px;
+  --radius-sm: 10px;
+  --radius-pill: 999px;
+
+  /* Hard offset shadows — the signature of the style */
+  --shadow-xs: 2px 2px 0 var(--ink);
+  --shadow-sm: 4px 4px 0 var(--ink);
+  --shadow: 6px 6px 0 var(--ink);
+  --shadow-lg: 10px 10px 0 var(--ink);
+
+  --font-display: 'Archivo Black', 'Arial Black', system-ui, sans-serif;
+  --font-body: 'Nunito', 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-body);
+  font-weight: 700;
+  color: var(--ink);
+  background-color: var(--paper);
+  /* Faint dot grid — texture without softening anything */
+  background-image: radial-gradient(var(--ink) 1.2px, transparent 1.2px);
+  background-size: 26px 26px;
+  background-position: -13px -13px;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  margin: 0;
+  line-height: 1.05;
+}
+
+button {
+  font-family: var(--font-body);
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+/* --------------------------------------------------------------------------
+   Primitives
+   -------------------------------------------------------------------------- */
+
+.slab {
+  background: var(--card);
+  border: var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+/* Chunky pressable button. Travels into its own shadow on click. */
+.btn {
+  --btn-bg: var(--card);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 22px;
+  font-size: 1rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  background: var(--btn-bg);
+  border: var(--border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+  transition: transform 80ms steps(2, end), box-shadow 80ms steps(2, end);
+}
+
+.btn:hover:not(:disabled) {
+  transform: translate(-1px, -1px);
+  box-shadow: var(--shadow);
+}
+
+.btn:active:not(:disabled) {
+  transform: translate(4px, 4px);
+  box-shadow: 0 0 0 var(--ink);
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  box-shadow: var(--shadow-xs);
+  transform: none;
+}
+
+.btn:focus-visible {
+  outline: var(--bw) solid var(--blue);
+  outline-offset: 3px;
+}
+
+.btn--green {
+  --btn-bg: var(--green);
+  color: #fff;
+}
+.btn--blue {
+  --btn-bg: var(--blue);
+  color: #fff;
+}
+.btn--yellow {
+  --btn-bg: var(--yellow);
+}
+.btn--red {
+  --btn-bg: var(--red);
+  color: #fff;
+}
+.btn--ghost {
+  --btn-bg: transparent;
+  box-shadow: none;
+}
+.btn--ghost:hover:not(:disabled) {
+  --btn-bg: var(--card);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn--lg {
+  padding: 20px 34px;
+  font-size: 1.15rem;
+  box-shadow: var(--shadow);
+}
+.btn--lg:hover:not(:disabled) {
+  box-shadow: var(--shadow-lg);
+}
+.btn--block {
+  width: 100%;
+}
+
+/* Small hard-edged label */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  font-size: 0.75rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  background: var(--card);
+  border: 2px solid var(--ink);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-xs);
+  white-space: nowrap;
+}
+
+.chip--yellow {
+  background: var(--yellow);
+}
+.chip--green {
+  background: var(--green);
+  color: #fff;
+}
+.chip--red {
+  background: var(--red);
+  color: #fff;
+}
+.chip--blue {
+  background: var(--blue);
+  color: #fff;
+}
+
+/* --------------------------------------------------------------------------
+   App shell
+   -------------------------------------------------------------------------- */
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 20px 40px;
+}
+
+.shell {
+  width: 100%;
+  max-width: 940px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 18px;
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  letter-spacing: -0.02em;
+  color: var(--paper);
+  background: var(--ink);
+  border: var(--border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+  /* Slight tilt — brutalism likes things a little off-axis */
+  transform: rotate(-1.5deg);
+}
+
+.wordmark__dot {
+  width: 12px;
+  height: 12px;
+  background: var(--green);
+  border: 2px solid var(--paper);
+  border-radius: 3px;
+}
+
+.stat-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* --------------------------------------------------------------------------
+   Setup screen
+   -------------------------------------------------------------------------- */
+
+.hero {
+  padding: 28px 26px;
+  margin-bottom: 26px;
+  background: var(--yellow);
+  border: var(--bw-thick) solid var(--ink);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+}
+
+.hero h1 {
+  font-size: clamp(2rem, 6vw, 3.2rem);
+  margin-bottom: 10px;
+}
+
+.hero p {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  max-width: 52ch;
+}
+
+.hero__underline {
+  display: inline-block;
+  padding: 0 6px;
+  background: var(--ink);
+  color: var(--yellow);
+  transform: rotate(-1deg);
+}
+
+.section {
+  margin-bottom: 30px;
+}
+
+.section__head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.section__num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  flex: none;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  color: #fff;
+  background: var(--ink);
+  border: var(--border);
+  border-radius: 50%;
+  box-shadow: var(--shadow-xs);
+}
+
+.section__title {
+  font-size: 1.35rem;
+}
+
+.lang-grid {
+  display: grid;
+  /* Wide enough for the longest name plus its code badge without clipping */
+  grid-template-columns: repeat(auto-fill, minmax(172px, 1fr));
+  gap: 12px;
+}
+
+.lang-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  font-size: 1rem;
+  font-weight: 900;
+  text-align: left;
+  background: var(--card);
+  border: var(--border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+  transition: transform 80ms steps(2, end), box-shadow 80ms steps(2, end);
+}
+
+.lang-card:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: var(--shadow);
+}
+
+.lang-card:active {
+  transform: translate(3px, 3px);
+  box-shadow: 0 0 0 var(--ink);
+}
+
+.lang-card[aria-pressed='true'] {
+  background: var(--blue);
+  color: #fff;
+  transform: translate(2px, 2px);
+  box-shadow: var(--shadow-xs);
+}
+
+/* Lettered language badge — renders the same on every platform */
+.lang-card__code {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 28px;
+  flex: none;
+  font-size: 0.8rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  color: var(--paper);
+  background: var(--ink);
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+}
+
+.lang-card[aria-pressed='true'] .lang-card__code {
+  color: var(--ink);
+  background: var(--paper);
+  border-color: var(--paper);
+}
+
+.scenario-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 14px;
+}
+
+.scenario-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 18px;
+  text-align: left;
+  background: var(--card);
+  border: var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  transition: transform 80ms steps(2, end), box-shadow 80ms steps(2, end);
+}
+
+.scenario-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow);
+}
+
+.scenario-card[aria-pressed='true'] {
+  /* Selected card takes on its accent color, set inline per card */
+  background: var(--accent, var(--green));
+  transform: translate(3px, 3px);
+  box-shadow: var(--shadow-xs);
+}
+
+.scenario-card__emoji {
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.scenario-card__title {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+}
+
+.scenario-card__blurb {
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.35;
+  margin: 0;
+}
+
+.scenario-card__level {
+  position: absolute;
+  top: -10px;
+  right: 12px;
+}
+
+.custom-scenario {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.field-label {
+  font-size: 0.8rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.input,
+.textarea {
+  width: 100%;
+  padding: 14px 16px;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink);
+  background: var(--card);
+  border: var(--border);
+  border-radius: var(--radius-sm);
+  box-shadow: inset var(--shadow-xs);
+}
+
+.input::placeholder,
+.textarea::placeholder {
+  color: #9c9689;
+  font-weight: 700;
+}
+
+.input:focus,
+.textarea:focus {
+  outline: none;
+  border-color: var(--blue);
+  box-shadow: var(--shadow-sm);
+}
+
+.textarea {
+  min-height: 84px;
+  resize: vertical;
+}
+
+.start-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding-top: 4px;
+}
+
+.start-hint {
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+/* --------------------------------------------------------------------------
+   Chat screen
+   -------------------------------------------------------------------------- */
+
+.chat {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  background: var(--card);
+  border: var(--bw-thick) solid var(--ink);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+
+.chat__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding: 14px 18px;
+  background: var(--purple);
+  border-bottom: var(--bw-thick) solid var(--ink);
+}
+
+.chat__scene {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.chat__avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  flex: none;
+  font-size: 1.5rem;
+  background: var(--card);
+  border: var(--border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-xs);
+}
+
+.chat__title {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  line-height: 1.15;
+}
+
+.chat__sub {
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.transcript {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 22px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.turn {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 78%;
+}
+
+.turn--buddy {
+  align-self: flex-start;
+  align-items: flex-start;
+}
+
+.turn--user {
+  align-self: flex-end;
+  align-items: flex-end;
+}
+
+.turn__meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.turn__who {
+  font-size: 0.7rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.65;
+}
+
+/* Keyboard/touch affordance for the hover translation */
+.translate-btn {
+  padding: 2px 8px;
+  font-size: 0.62rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  color: var(--ink);
+  background: var(--card);
+  border: 2px solid var(--ink);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-xs);
+  opacity: 0.55;
+  transition: opacity 80ms steps(2, end), transform 80ms steps(2, end);
+}
+
+.turn--buddy:hover .translate-btn,
+.translate-btn:focus-visible,
+.translate-btn[aria-expanded='true'] {
+  opacity: 1;
+}
+
+.translate-btn[aria-expanded='true'] {
+  color: #fff;
+  background: var(--blue);
+}
+
+.translate-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 0 0 0 var(--ink);
+}
+
+/* Bubble and translation form a single hover region. The translation opens
+   directly beneath the bubble, so anything smaller than this would close the
+   moment the cursor travelled down towards what it revealed. */
+.say {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+  max-width: 100%;
+}
+
+/* Hovering a received line asks for its English meaning */
+.bubble--buddy {
+  cursor: help;
+}
+
+.bubble--buddy:focus-visible {
+  outline: var(--bw) solid var(--blue);
+  outline-offset: 3px;
+}
+
+/* The English meaning of a received line — blue, to sit apart from the
+   white in-character reply and the yellow grammar fix. */
+.translation {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  max-width: 100%;
+  padding: 11px 14px;
+  background: var(--blue);
+  color: #fff;
+  border: var(--border);
+  border-radius: var(--radius-sm);
+  border-top-left-radius: 4px;
+  box-shadow: var(--shadow-sm);
+}
+
+.translation__tag {
+  flex: none;
+  padding: 3px 9px;
+  font-size: 0.66rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  color: var(--ink);
+  background: var(--card);
+  border: 2px solid var(--ink);
+  border-radius: var(--radius-pill);
+}
+
+.translation__text {
+  font-size: 0.94rem;
+  font-weight: 800;
+  line-height: 1.4;
+}
+
+.translation__text--muted {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  opacity: 0.9;
+}
+
+/* --------------------------------------------------------------------------
+   Voice
+   -------------------------------------------------------------------------- */
+
+/* Sits beside the EN button and behaves like it, in green to read as "play"
+   rather than as a second translation control. */
+.speak-btn {
+  padding: 2px 9px;
+  font-size: 0.62rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  color: var(--ink);
+  background: var(--card);
+  border: 2px solid var(--ink);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-xs);
+  opacity: 0.55;
+  transition: opacity 80ms steps(2, end), transform 80ms steps(2, end);
+}
+
+.turn--buddy:hover .speak-btn,
+.speak-btn:focus-visible,
+.speak-btn[aria-pressed='true'] {
+  opacity: 1;
+}
+
+.speak-btn[aria-pressed='true'] {
+  color: #fff;
+  background: var(--green);
+}
+
+.speak-btn:active:not(:disabled) {
+  transform: translate(2px, 2px);
+  box-shadow: 0 0 0 var(--ink);
+}
+
+.speak-btn:disabled {
+  opacity: 0.4;
+}
+
+/* The line being read aloud, so the eye can find it while listening. */
+.bubble--speaking {
+  border-color: var(--green-deep);
+  box-shadow: var(--shadow-sm);
+}
+
+/* The word being spoken right now. No transition on purpose: at 0.7x speed a
+   fade would still be running when the next word starts. */
+.spoken {
+  padding: 1px 2px;
+  margin: 0 -2px;
+  color: var(--ink);
+  background: var(--yellow);
+  border-radius: 3px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/* Mic button in the composer, sized to match the Send button's height. */
+.btn--mic {
+  --btn-bg: var(--card);
+  flex: none;
+  padding: 14px 16px;
+  font-size: 1.05rem;
+  line-height: 1;
+}
+
+.btn--mic-live {
+  --btn-bg: var(--red);
+  color: #fff;
+}
+
+/* A strip above the composer for recording state and voice errors. */
+.voice-note {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 18px;
+  font-size: 0.85rem;
+  font-weight: 800;
+  border-top: var(--bw-thick) solid var(--ink);
+}
+
+.voice-note--live {
+  background: var(--yellow);
+}
+
+.voice-note--bad {
+  background: var(--red);
+  color: #fff;
+}
+
+.voice-note__text {
+  flex: 1;
+}
+
+.voice-note__action {
+  flex: none;
+  padding: 4px 10px;
+  font-size: 0.68rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink);
+  background: var(--card);
+  border: 2px solid var(--ink);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-xs);
+}
+
+.voice-note__action:active {
+  transform: translate(2px, 2px);
+  box-shadow: 0 0 0 var(--ink);
+}
+
+.rec-dot {
+  flex: none;
+  width: 11px;
+  height: 11px;
+  background: var(--red);
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+  animation: rec-pulse 1s steps(2, end) infinite;
+}
+
+@keyframes rec-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.25;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rec-dot {
+    animation: none;
+  }
+}
+
+/* Small stepped dots for the inline translating state */
+.dots {
+  display: inline-flex;
+  gap: 4px;
+}
+
+.dots span {
+  width: 6px;
+  height: 6px;
+  background: #fff;
+  border-radius: 1px;
+  animation: thud 900ms steps(2, end) infinite;
+}
+
+.dots span:nth-child(2) {
+  animation-delay: 150ms;
+}
+.dots span:nth-child(3) {
+  animation-delay: 300ms;
+}
+
+.bubble {
+  padding: 14px 16px;
+  font-size: 1.02rem;
+  font-weight: 700;
+  line-height: 1.45;
+  border: var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.bubble--buddy {
+  background: var(--card);
+  border-bottom-left-radius: 4px;
+}
+
+.bubble--user {
+  background: var(--green);
+  color: #fff;
+  border-bottom-right-radius: 4px;
+}
+
+/* The grammar correction, lifted out of the reply into its own loud card */
+.correction {
+  width: 100%;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 12px 14px;
+  background: var(--yellow);
+  border: var(--border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+}
+
+.correction__tag {
+  flex: none;
+  padding: 3px 9px;
+  font-size: 0.68rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #fff;
+  background: var(--red);
+  border: 2px solid var(--ink);
+  border-radius: var(--radius-pill);
+}
+
+.correction__text {
+  font-size: 0.95rem;
+  font-weight: 800;
+  line-height: 1.4;
+}
+
+/* Three hard squares that step up and down — no smooth easing */
+.typing {
+  display: inline-flex;
+  gap: 6px;
+  padding: 16px;
+  background: var(--card);
+  border: var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+}
+
+.typing span {
+  width: 11px;
+  height: 11px;
+  background: var(--ink);
+  border-radius: 2px;
+  animation: thud 900ms steps(2, end) infinite;
+}
+
+.typing span:nth-child(2) {
+  animation-delay: 150ms;
+}
+.typing span:nth-child(3) {
+  animation-delay: 300ms;
+}
+
+@keyframes thud {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-7px);
+  }
+}
+
+.composer {
+  display: flex;
+  gap: 12px;
+  padding: 14px 18px;
+  background: var(--paper);
+  border-top: var(--bw-thick) solid var(--ink);
+}
+
+.composer .input {
+  flex: 1;
+}
+
+.banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  margin-bottom: 18px;
+  font-weight: 800;
+  background: var(--red);
+  color: #fff;
+  border: var(--border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+}
+
+/* --------------------------------------------------------------------------
+   Session summary
+   -------------------------------------------------------------------------- */
+
+.summary {
+  padding: 30px 26px;
+  background: var(--card);
+  border: var(--bw-thick) solid var(--ink);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+}
+
+.summary__farewell {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 5vw, 2.6rem);
+  margin-bottom: 18px;
+}
+
+.summary__scores {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.score {
+  flex: 1 1 150px;
+  padding: 16px;
+  background: var(--paper);
+  border: var(--border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+}
+
+.score__value {
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  line-height: 1;
+}
+
+.score__label {
+  font-size: 0.75rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-top: 6px;
+}
+
+.fix-list {
+  list-style: none;
+  margin: 0 0 24px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.fix-list li {
+  padding: 12px 14px;
+  font-weight: 800;
+  background: var(--yellow);
+  border: var(--border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-xs);
+}
+
+.empty-note {
+  padding: 16px;
+  margin-bottom: 24px;
+  font-weight: 800;
+  background: var(--green);
+  color: #fff;
+  border: var(--border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+}
+
+/* --------------------------------------------------------------------------
+   Responsive + motion preferences
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 560px) {
+  .app {
+    padding: 16px 12px 28px;
+  }
+  .turn {
+    max-width: 92%;
+  }
+  .hero {
+    padding: 22px 18px;
+  }
+  .composer {
+    flex-direction: column;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
